@@ -1,0 +1,14 @@
+---
+const { title, url = "" } = Astro.props;
+---
+<div class="channel-item">
+  <span class="channel-icon" aria-hidden="true">
+    <img src="/images/telegram-icon.png" alt="" width="28" height="26" />
+  </span>
+  <span class="channel-title">{title}</span>
+  {url ? (
+    <a class="text-link" href={url} target="_blank" rel="noopener noreferrer">ورود به کانال</a>
+  ) : (
+    <span class="coming-soon">لینک به‌زودی</span>
+  )}
+</div>

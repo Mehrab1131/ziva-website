@@ -1,0 +1,22 @@
+{
+  "name": "ziva-website",
+  "version": "0.1.6",
+  "private": true,
+  "description": "Ziva — a lightweight Persian educational website.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "fetch-fonts": "node scripts/fetch-fonts.mjs",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "7.1.6"
+  },
+  "devDependencies": {
+    "wrangler": "4.123.0"
+  }
+}

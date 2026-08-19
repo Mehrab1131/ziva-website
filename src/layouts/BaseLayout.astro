@@ -1,0 +1,114 @@
+---
+import { site, navItems } from "../data/site";
+import "../styles/global.css";
+
+const {
+  title = site.name,
+  description = site.description,
+  type = "website",
+  image = "/images/og-image.png",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: site.name,
+  url: Astro.site?.toString(),
+  description: site.description,
+  email: site.contactEmail,
+  inLanguage: "fa-IR"
+};
+---
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#2E7D5B" />
+    <meta name="robots" content="index, follow" />
+    <link rel="apple-touch-icon" href="/images/ziva-logo.png" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/images/ziva-logo.png" type="image/png" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="زیوا" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="زیوا — آکادمی زیست‌شناسی" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label="زیوا — صفحه اصلی">
+          <img class="brand-logo" src="/images/ziva-logo.png" alt="" width="42" height="42" />
+          <span><strong>زیوا</strong><small>{site.tagline}</small></span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="ناوبری اصلی">
+          {navItems.map((item) => (
+            <a href={item.href} class:list={{ active: Astro.url.pathname === item.href || (item.href === "/articles/" && Astro.url.pathname.startsWith("/articles/")) }}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <details class="mobile-nav">
+          <summary aria-label="باز کردن منوی اصلی">منو</summary>
+          <nav aria-label="ناوبری اصلی">
+            {navItems.map((item) => (
+              <a href={item.href} class:list={{ active: Astro.url.pathname === item.href || (item.href === "/articles/" && Astro.url.pathname.startsWith("/articles/")) }}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </details>
+
+        <a class="header-cta" href="/#telegram">کانال‌های تلگرام</a>
+      </div>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="footer-brand" href="/">زیوا</a>
+          <p>{site.tagline}</p>
+        </div>
+        <div>
+          <h2>دسترسی سریع</h2>
+          <ul>{navItems.slice(0, 6).map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul>
+        </div>
+        <div>
+          <h2>آموزش‌ها</h2>
+          <ul>
+            <li><a href="/education/#biology">زیست‌شناسی دبیرستان</a></li>
+            <li><a href="/education/#science">علوم متوسطه اول</a></li>
+            <li><a href="/courses/#campbell">پروژه‌های عمیق</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>ارتباط</h2>
+          <p>برای ارتباط و اطلاع از برنامه‌ها:</p>
+          <a class="footer-email" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© 2026 زیوا</span>
+        <span>ساخته‌شده با HTML، CSS و Astro</span>
+      </div>
+    </footer>
+  </body>
+</html>

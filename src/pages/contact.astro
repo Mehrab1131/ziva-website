@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+---
+<BaseLayout title="ارتباط">
+  <section class="page-hero"><div class="container narrow"><span class="eyebrow">ارتباط</span><h1>با زیوا در ارتباط باشید</h1><p>برای اطلاع از برنامه‌ها و دریافت محتوای آموزشی، کانال‌های زیوا را دنبال کنید.</p></div></section>
+  <section class="section"><div class="container contact-grid">
+    <div class="contact-card"><span class="eyebrow">ایمیل</span><h2>ارتباط مستقیم</h2><a class="contact-email" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></div>
+    <div class="contact-card"><span class="eyebrow">تلگرام</span><h2>کانال‌های زیوا</h2><p>لینک کانال‌ها پس از نهایی شدن نام کاربری در این بخش قرار می‌گیرد.</p><a class="button button-primary" href="/#telegram">مشاهده کانال‌ها</a></div>
+  </div></section>
+</BaseLayout>

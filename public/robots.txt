@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zivabio.ir/sitemap-index.xml

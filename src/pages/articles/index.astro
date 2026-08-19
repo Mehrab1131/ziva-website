@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+
+const articles = (await getCollection("articles")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+<BaseLayout
+  title="مقالات آموزشی | زیوا"
+  description="مقالات آموزشی زیوا درباره زیست‌شناسی، علوم تجربی و یادگیری مفهومی."
+>
+  <section class="page-hero">
+    <div class="narrow">
+      <span class="eyebrow">زیوا · مطالب آموزشی</span>
+      <h1>مقالات آموزشی</h1>
+      <p>مطالبی برای فهم بهتر مفاهیم زیست‌شناسی و علوم، با تأکید بر ارتباط میان مفاهیم و نگاه علمی به یادگیری.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title="مطالب زیوا" description="مقالات تازه و منتخب آموزشی را از اینجا دنبال کنید." />
+      <div class="articles-grid">
+        {articles.map((article) => <ArticleCard article={article} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

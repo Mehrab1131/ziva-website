@@ -1,0 +1,102 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ChannelCard from "../components/ChannelCard.astro";
+import { getCollection } from "astro:content";
+import { site } from "../data/site";
+
+const articles = (await getCollection("articles"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+<BaseLayout title="زیوا | آموزش برای فهمیدن، نه فقط به خاطر سپردن.">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">زیوا · آموزش زیست‌شناسی و علوم</span>
+        <h1>{site.tagline}</h1>
+        <p class="hero-lead">
+          زیوا یک مجموعهٔ آموزشی با تمرکز بر آموزش عمیق و مفهومی زیست‌شناسی و علوم تجربی است.
+          هدف، ایجاد درکی واقعی از پدیده‌های زنده و پرورش تفکر علمی در یادگیری است.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/education/">آشنایی با آموزش‌ها</a>
+          <a class="button button-secondary" href="/about/">درباره زیوا</a>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-circle"></div>
+        <svg class="botanical-flask" viewBox="0 0 420 460">
+          <path class="flask-glass" d="M177 54v151L83 367c-18 34 7 61 43 61h168c36 0 61-27 43-61l-94-162V54"/>
+          <path class="flask-neck" d="M160 54h100M174 78h72"/>
+          <path class="flask-liquid" d="M109 331c39-18 69 8 103-2 33-10 56-25 99-4l28 50c12 23-5 39-39 39H128c-34 0-51-16-39-39l20-44Z"/>
+          <path class="stem" d="M211 255V112"/>
+          <path class="leaf" d="M211 170c-50-4-76-34-70-78 45 3 70 29 70 78Z"/>
+          <path class="leaf leaf-right" d="M211 215c50-4 76-34 70-78-45 3-70 29-70 78Z"/>
+          <path class="vein" d="M211 170 151 98M211 215l66-68"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title="محورهای آموزشی زیوا" />
+      <div class="focus-grid">
+        <article class="focus-card">
+          <div class="focus-icon">◉</div>
+          <h3>زیست‌شناسی دبیرستان</h3>
+          <p>تدریس مفهومی زیست‌شناسی، آمادگی امتحانات نهایی و مسیر آمادگی کنکور.</p>
+          <a class="text-link" href="/education/#biology">مشاهده بیشتر ←</a>
+        </article>
+        <article class="focus-card">
+          <div class="focus-icon">△</div>
+          <h3>علوم متوسطه اول</h3>
+          <p>علوم هفتم، هشتم و نهم با تأکید بر فهم مفاهیم، فعالیت‌ها و ارتباط با دنیای واقعی.</p>
+          <a class="text-link" href="/education/#science">مشاهده بیشتر ←</a>
+        </article>
+        <article class="focus-card">
+          <div class="focus-icon">▱</div>
+          <h3>پروژه‌ها و مطالعات عمیق</h3>
+          <p>پروژه‌هایی مانند دورهٔ زیست‌شناسی بر پایهٔ Campbell Biology و ایده‌های آموزشی آینده.</p>
+          <a class="text-link" href="/courses/#campbell">مشاهده بیشتر ←</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="telegram">
+    <div class="container">
+      <SectionHeading title="کانال‌های زیوا در تلگرام" description="محتوای آموزشی و فایل‌های روزمره در کانال‌های زیوا منتشر می‌شوند." />
+      <div class="channels-list">
+        {site.telegram.channels.map((channel) => <ChannelCard title={channel.title} url={channel.url} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading title="آخرین مطالب آموزشی" description="مطالب منتخب زیوا برای مطالعهٔ عمیق‌تر مفاهیم زیست‌شناسی و علوم." />
+      <div class="articles-grid">
+        {articles.map((article) => (
+          <article class="article-card">
+            <span class="article-category">{article.data.category}</span>
+            <h3><a href={`/articles/${article.id}/`}>{article.data.title}</a></h3>
+            <p>{article.data.description}</p>
+            <a class="text-link" href={`/articles/${article.id}/`}>مطالعه مطلب ←</a>
+          </article>
+        ))}
+      </div>
+      <div class="center-link"><a class="button button-secondary" href="/articles/">مشاهده همه مقالات</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container philosophy-grid">
+      <article><span class="line-icon">✦</span><h3>چرا زیوا؟</h3><p>نام «زیوا» از ریشهٔ گیلکی «زیوستن»، به معنای زندگی، الهام گرفته شده است؛ مفهومی که با زیست‌شناسی و نگاه ما به یادگیری پیوند دارد.</p></article>
+      <article><span class="line-icon">◎</span><h3>رویکرد ما</h3><p>یادگیری عمیق، ارتباط میان مفاهیم، توجه به شواهد و پرورش تفکر علمی؛ نه انباشتن اطلاعاتی که خیلی زود فراموش می‌شوند.</p></article>
+      <article><span class="line-icon">◇</span><h3>برای چه کسانی؟</h3><p>برای دانش‌آموزانی که می‌خواهند مطالب را واقعاً بفهمند و برای مدرسه، امتحان نهایی و مسیرهای جدی‌تر یادگیری آماده شوند.</p></article>
+    </div>
+  </section>
+</BaseLayout>
