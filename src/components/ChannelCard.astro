@@ -1,14 +1,17 @@
 ---
-const { title, url = "" } = Astro.props;
+const { title, description = "", url = "" } = Astro.props;
 ---
-<div class="channel-item">
-  <span class="channel-icon" aria-hidden="true">
+<article class="telegram-card">
+  <span class="telegram-icon" aria-hidden="true">
     <img src="/images/telegram-icon.png" alt="" width="28" height="26" />
   </span>
-  <span class="channel-title">{title}</span>
+  <div class="telegram-copy">
+    <h3>{title}</h3>
+    {description && <p>{description}</p>}
+  </div>
   {url ? (
-    <a class="text-link" href={url} target="_blank" rel="noopener noreferrer">ورود به کانال</a>
+    <a class="card-arrow" href={url} target="_blank" rel="noopener noreferrer" aria-label={`ورود به ${title}`}><span aria-hidden="true">←</span></a>
   ) : (
-    <span class="coming-soon">لینک به‌زودی</span>
+    <span class="card-arrow card-arrow-muted" aria-hidden="true">←</span>
   )}
-</div>
+</article>

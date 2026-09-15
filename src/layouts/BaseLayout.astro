@@ -7,6 +7,7 @@ const {
   description = site.description,
   type = "website",
   image = "/images/og-image.png",
+  preloadImage,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
@@ -19,6 +20,7 @@ const schema = {
   email: site.contactEmail,
   inLanguage: "fa-IR"
 };
+const isActive = (href: string) => Astro.url.pathname === href || (href === "/articles/" && Astro.url.pathname.startsWith("/articles/"));
 ---
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -26,11 +28,14 @@ const schema = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#2E7D5B" />
+    <meta name="theme-color" content="#167d67" />
     <meta name="robots" content="index, follow" />
-    <link rel="apple-touch-icon" href="/images/ziva-logo.png" />
+    <link rel="preload" href="/fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Vazirmatn-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    {preloadImage && <link rel="preload" href={preloadImage} as="image" type="image/webp" fetchpriority="high" />}
+    <link rel="apple-touch-icon" href="/images/ziva-logo-gradient.png" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/images/ziva-logo.png" type="image/png" />
+    <link rel="icon" href="/images/ziva-logo-gradient.png" type="image/png" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -52,62 +57,51 @@ const schema = {
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="/" aria-label="زیوا — صفحه اصلی">
-          <img class="brand-logo" src="/images/ziva-logo.png" alt="" width="42" height="42" />
+          <img class="brand-logo" src="/images/ziva-logo-gradient.png" alt="" width="42" height="42" />
           <span><strong>زیوا</strong><small>{site.tagline}</small></span>
         </a>
 
         <nav class="desktop-nav" aria-label="ناوبری اصلی">
-          {navItems.map((item) => (
-            <a href={item.href} class:list={{ active: Astro.url.pathname === item.href || (item.href === "/articles/" && Astro.url.pathname.startsWith("/articles/")) }}>
-              {item.label}
-            </a>
+          {navItems.slice(0, 6).map((item) => (
+            <a href={item.href} class:list={{ active: isActive(item.href) }}>{item.label}</a>
           ))}
         </nav>
+
+        <div class="header-tools">
+          <a class="header-search" href="/articles/" aria-label="مطالب آموزشی">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 5 5"></path></svg>
+          </a>
+          <a class="header-cta" href="/contact/">تماس با ما</a>
+        </div>
 
         <details class="mobile-nav">
           <summary aria-label="باز کردن منوی اصلی">منو</summary>
           <nav aria-label="ناوبری اصلی">
             {navItems.map((item) => (
-              <a href={item.href} class:list={{ active: Astro.url.pathname === item.href || (item.href === "/articles/" && Astro.url.pathname.startsWith("/articles/")) }}>
-                {item.label}
-              </a>
+              <a href={item.href} class:list={{ active: isActive(item.href) }}>{item.label}</a>
             ))}
           </nav>
         </details>
-
-        <a class="header-cta" href="/#telegram">کانال‌های تلگرام</a>
       </div>
     </header>
 
     <main><slot /></main>
 
     <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <a class="footer-brand" href="/">زیوا</a>
-          <p>{site.tagline}</p>
-        </div>
-        <div>
-          <h2>دسترسی سریع</h2>
-          <ul>{navItems.slice(0, 6).map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul>
-        </div>
-        <div>
-          <h2>آموزش‌ها</h2>
-          <ul>
-            <li><a href="/education/#biology">زیست‌شناسی دبیرستان</a></li>
-            <li><a href="/education/#science">علوم متوسطه اول</a></li>
-            <li><a href="/courses/#campbell">پروژه‌های عمیق</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2>ارتباط</h2>
-          <p>برای ارتباط و اطلاع از برنامه‌ها:</p>
-          <a class="footer-email" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+      <div class="footer-wave" aria-hidden="true"></div>
+      <div class="container footer-main">
+        <a class="footer-brand-block" href="/" aria-label="زیوا — صفحه اصلی">
+          <img src="/images/ziva-logo-gradient.png" alt="" width="52" height="51" />
+          <span><strong>زیوا</strong><small>{site.tagline}</small></span>
+        </a>
+        <div class="footer-socials" aria-label="راه‌های ارتباطی">
+          <a href="/channels/" aria-label="تلگرام"><svg class="social-icon telegram-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 3.4 18.4 20c-.2 1.2-.9 1.5-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.2-8.3c.4-.4-.1-.6-.6-.2L5.9 13.5.9 12c-1.1-.3-1.1-1 .2-1.5L20.7 3c.9-.3 1.3.2.9.4Z"/></svg></a>
+          <a href="/contact/" aria-label="ارتباط با زیوا"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3h9A2.5 2.5 0 0 1 19 5.5v6A2.5 2.5 0 0 1 16.5 14H11l-4.5 4v-4H7.5A2.5 2.5 0 0 1 5 11.5v-6Z"/><path d="M8.5 7.5h7M8.5 10.5h4.5"/></svg></a>
+          <span class="social-link social-link-disabled" aria-label="اینستاگرام"><svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.9" r="1" fill="currentColor" stroke="none"/></svg></span>
         </div>
       </div>
       <div class="container footer-bottom">
         <span>© 2026 زیوا</span>
-        <span>ساخته‌شده با HTML، CSS و Astro</span>
       </div>
     </footer>
   </body>

@@ -9,6 +9,7 @@ const articles = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     category: z.string().default("زیست‌شناسی"),
+    image: z.string().optional(),
   }),
 });
 

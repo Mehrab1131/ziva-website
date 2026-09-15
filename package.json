@@ -1,6 +1,6 @@
 {
   "name": "ziva-website",
-  "version": "0.1.6",
+  "version": "0.1.9",
   "private": true,
   "description": "Ziva — a lightweight Persian educational website.",
   "type": "module",
@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.3",
-    "astro": "7.1.6"
+    "astro": "^7.3.2"
   },
   "devDependencies": {
-    "wrangler": "4.123.0"
+    "wrangler": "^4.131.2"
   }
 }

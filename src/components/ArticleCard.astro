@@ -3,6 +3,7 @@ const { article } = Astro.props;
 const date = new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(article.data.pubDate);
 ---
 <article class="article-card">
+  <a class="article-card-image" href={`/articles/${article.id}/`} aria-label={`تصویر ${article.data.title}`}><img src={article.data.image ?? "/images/article-placeholder.svg"} alt="" loading="lazy" /></a>
   <span class="article-category">{article.data.category}</span>
   <h3><a href={`/articles/${article.id}/`}>{article.data.title}</a></h3>
   <p>{article.data.description}</p>
