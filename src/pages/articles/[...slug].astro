@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDate } from "../../lib/utils";
 
 export async function getStaticPaths() {
   const articles = await getCollection("articles");
@@ -11,33 +12,31 @@ export async function getStaticPaths() {
 }
 
 const { article } = Astro.props;
+const { title, description, category, pubDate, updatedDate } = article.data;
 const { Content, headings } = await render(article);
-const date = new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(article.data.pubDate);
-const updated = article.data.updatedDate
-  ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(article.data.updatedDate)
-  : null;
+const tocHeadings = headings.filter((heading) => heading.depth <= 2);
 ---
-<BaseLayout title={`${article.data.title} | زیوا`} description={article.data.description}>
+<BaseLayout title={`${title} | زیوا`} description={description} type="article">
   <article class="article-page">
     <header class="page-hero">
       <div class="narrow">
-        <span class="eyebrow">{article.data.category}</span>
-        <h1>{article.data.title}</h1>
-        <p>{article.data.description}</p>
+        <span class="eyebrow">{category}</span>
+        <h1>{title}</h1>
+        <p>{description}</p>
         <div class="article-header-meta">
-          <time datetime={article.data.pubDate.toISOString()}>انتشار: {date}</time>
-          {updated && <time datetime={article.data.updatedDate?.toISOString()}>به‌روزرسانی: {updated}</time>}
+          <time datetime={pubDate.toISOString()}>انتشار: {formatDate(pubDate)}</time>
+          {updatedDate && <time datetime={updatedDate.toISOString()}>به‌روزرسانی: {formatDate(updatedDate)}</time>}
         </div>
       </div>
     </header>
 
     <div class="section">
       <div class="container article-layout">
-        {headings.length > 1 && (
+        {tocHeadings.length > 1 && (
           <aside class="article-toc" aria-label="فهرست مطالب">
             <strong>در این مطلب</strong>
             <ul>
-              {headings.filter((heading) => heading.depth <= 2).map((heading) => (
+              {tocHeadings.map((heading) => (
                 <li><a href={`#${heading.slug}`}>{heading.text}</a></li>
               ))}
             </ul>

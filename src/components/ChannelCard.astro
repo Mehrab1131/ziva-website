@@ -1,16 +1,28 @@
 ---
+import TelegramIcon from "./TelegramIcon.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  url?: string;
+}
 const { title, description = "", url = "" } = Astro.props;
+const external = url.startsWith("http");
 ---
 <article class="telegram-card">
-  <span class="telegram-icon" aria-hidden="true">
-    <img src="/images/telegram-icon.png" alt="" width="28" height="26" />
-  </span>
+  <span class="telegram-icon" aria-hidden="true"><TelegramIcon /></span>
   <div class="telegram-copy">
     <h3>{title}</h3>
     {description && <p>{description}</p>}
   </div>
   {url ? (
-    <a class="card-arrow" href={url} target="_blank" rel="noopener noreferrer" aria-label={`ورود به ${title}`}><span aria-hidden="true">←</span></a>
+    <a
+      class="card-arrow"
+      href={url}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      aria-label={`ورود به ${title}`}
+    ><span aria-hidden="true">←</span></a>
   ) : (
     <span class="card-arrow card-arrow-muted" aria-hidden="true">←</span>
   )}

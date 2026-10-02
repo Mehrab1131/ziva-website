@@ -2,123 +2,63 @@
 
 وب‌سایت رسمی «زیوا»؛ یک سایت استاتیک، RTL و performance-first با Astro، با تمرکز بر آموزش زیست‌شناسی و علوم تجربی.
 
-## معماری پروژه
+## معماری
 
 ```text
-Astro Static
-    ↓
-npm run build
-    ↓
-dist/
-    ↓
-Cloudflare Workers Static Assets
-    ↓
-zivabio.ir
+Astro (static) → npm run build → dist/ → GitHub Pages → zivabio.ir
 ```
 
 اصول اصلی پروژه:
 
-- Static-first
-- Zero client-side JavaScript by default
-- بدون SSR و بدون `@astrojs/cloudflare`
-- بدون CDN خارجی برای assetهای اصلی
-- فونت Vazirmatn به‌صورت local
+- Static-first و بدون JavaScript سمت کلاینت
+- فونت Vazirmatn به‌صورت local (بدون CDN خارجی)
+- CSS دست‌نویس و سبک که داخل هر صفحه inline می‌شود
 - HTML معنایی و دسترس‌پذیر
-- CSS دست‌نویس و سبک
 - مقالات با Markdown و Astro Content Collections
-- SEO پایه شامل canonical، Open Graph، Twitter Card، Schema.org، robots.txt و sitemap
+- SEO پایه: canonical، Open Graph، Twitter Card، Schema.org، robots.txt و sitemap
 
-## پیش‌نیاز
+## اجرا روی سیستم شما
 
-Node.js و npm نصب باشد. سپس:
-
-```bash
-npm ci
-npm run dev
-```
-
-برای بررسی TypeScript/Astro:
+Node.js نسخهٔ ۲۲.۱۲ یا بالاتر لازم است.
 
 ```bash
-npm run check
+npm ci            # نصب وابستگی‌ها
+npm run dev       # سرور توسعه
+npm run check     # بررسی TypeScript/Astro
+npm run build     # ساخت خروجی در dist/
+npm run preview   # مشاهدهٔ خروجی build
 ```
 
-برای build تولیدی:
+قبل از هر انتشار، `npm run check && npm run build && npm run preview` را اجرا و نتیجه را محلی بررسی کنید.
 
-```bash
-npm run build
-```
-
-خروجی در `dist/` ساخته می‌شود.
-
-## مقالات آموزشی
-
-مقالات در مسیر زیر قرار دارند:
+## ساختار
 
 ```text
-src/content/articles/
+src/
+  components/   کامپوننت‌های قابل‌استفادهٔ مجدد
+  content/      مقالات (Markdown)
+  data/         اطلاعات سایت، منو و کانال‌ها (site.ts)
+  layouts/      BaseLayout (head، header، footer)
+  lib/          توابع کمکی (تاریخ، مرتب‌سازی مقالات)
+  pages/        مسیرها، شامل 404
+  styles/       global.css
+public/         فونت‌ها، تصاویر، robots.txt، CNAME
 ```
 
-هر مقاله یک فایل Markdown است و frontmatter آن باید مطابق نمونه‌های موجود باشد.
+## مقالات
 
-فهرست مقالات:
+هر مقاله یک فایل Markdown در `src/content/articles/` است و frontmatter آن باید با schema در `src/content.config.ts` هم‌خوان باشد.
 
-```text
-/articles/
-```
+## انتشار (GitHub Pages)
 
-مسیر هر مقاله بر اساس شناسه فایل ساخته می‌شود.
+با هر push به شاخهٔ `main`، workflow در `.github/workflows/deploy.yml` پروژه را check و build می‌کند و روی GitHub Pages منتشر می‌کند. دامنهٔ سفارشی در `public/CNAME` تعریف شده است.
 
-## فونت
+مراحل راه‌اندازی در تنظیمات مخزن:
 
-فونت‌های Vazirmatn مورد استفاده سایت در مسیر زیر قرار دارند و در Repository نگهداری می‌شوند:
-
-```text
-public/fonts/
-```
-
-در صورت نیاز می‌توان آن‌ها را با `npm run fetch-fonts` از مخزن رسمی Vazirmatn دریافت کرد.
-
-منبع رسمی: https://github.com/rastikerdar/vazirmatn
-
-## SEO و assetهای عمومی
-
-- `public/robots.txt` برای robots.txt
-- `@astrojs/sitemap` برای تولید sitemap
-- `public/images/og-image.png` برای Open Graph و Twitter Card
-- `public/images/ziva-logo.png` برای favicon و apple-touch-icon
-- metadata و Schema.org در `src/layouts/BaseLayout.astro`
-
-## Cloudflare Workers
-
-این پروژه به‌صورت Static روی Cloudflare Workers Static Assets منتشر می‌شود.
-
-- Production branch: `main`
-- Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
-- Static asset directory: `dist`
-- Wrangler configuration: `wrangler.jsonc`
-
-برای تغییرات معمول، ابتدا build و check محلی انجام شود و سپس commit/push انجام شود. Deployment از طریق Cloudflare به‌صورت خودکار انجام می‌شود.
-
-**این پروژه نباید صرفاً برای deployment به SSR یا Cloudflare adapter منتقل شود.**
-
-## GitHub Actions
-
-فایل workflow در:
-
-```text
-.github/workflows/deploy.yml
-```
-
-قرار دارد و در صورت استفاده از GitHub Actions برای انتشار، build و deployment را روی push به `main` انجام می‌دهد.
-
-## شخصی‌سازی
-
-اطلاعات عمومی سایت و لینک کانال‌ها در `src/data/site.ts` قرار دارد.
-
-لوگو و آیکن تلگرام در `public/images/` قرار دارند.
+1. Settings ← Pages ← Source: **GitHub Actions**
+2. Custom domain: `zivabio.ir` و فعال‌کردن **Enforce HTTPS**
+3. رکوردهای DNS دامنه طبق راهنمای GitHub برای Apex domain
 
 ## مجوز
 
-کد پروژه تحت MIT License است. فونت Vazirmatn تابع مجوز خود پروژه است. محتوای آموزشی، نام تجاری و لوگوی «زیوا» تحت مجوز کد قرار نمی‌گیرند.
+کد پروژه تحت MIT License است. فونت Vazirmatn تابع مجوز خود پروژه است. محتوای آموزشی، نام تجاری و لوگوی «زیوا» تحت مجوز کد قرار نمی‌گیرند (جزئیات در `CONTENT-LICENSE.md`).

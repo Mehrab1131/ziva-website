@@ -1,14 +1,23 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "../lib/utils";
+
+interface Props {
+  article: CollectionEntry<"articles">;
+}
 const { article } = Astro.props;
-const date = new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(article.data.pubDate);
+const { title, description, category, image, pubDate } = article.data;
+const href = `/articles/${article.id}/`;
 ---
 <article class="article-card">
-  <a class="article-card-image" href={`/articles/${article.id}/`} aria-label={`تصویر ${article.data.title}`}><img src={article.data.image ?? "/images/article-placeholder.svg"} alt="" loading="lazy" /></a>
-  <span class="article-category">{article.data.category}</span>
-  <h3><a href={`/articles/${article.id}/`}>{article.data.title}</a></h3>
-  <p>{article.data.description}</p>
+  <a class="article-card-image" href={href} aria-label={`تصویر ${title}`}>
+    <img src={image ?? "/images/article-placeholder.svg"} alt="" width="800" height="500" loading="lazy" decoding="async" />
+  </a>
+  <span class="article-category">{category}</span>
+  <h3><a href={href}>{title}</a></h3>
+  <p>{description}</p>
   <div class="article-meta">
-    <time datetime={article.data.pubDate.toISOString()}>{date}</time>
-    <a class="text-link" href={`/articles/${article.id}/`}>مطالعه مطلب ←</a>
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+    <a class="text-link" href={href}>مطالعه مطلب ←</a>
   </div>
 </article>
